@@ -7,9 +7,10 @@ public class DinoController : MonoBehaviour
 {
     public float runSpeed;
     public float xMoveSpeed;
+
     void Start()
     {
-
+        
     }
 
     void Update()
@@ -33,5 +34,19 @@ public class DinoController : MonoBehaviour
             transform.position += Vector3.right * xMoveSpeed * Time.deltaTime;
         }
 
+        // 기존 방식
+        /*if(transform.position.x >= 3.5f)
+        {
+            transform.position = new Vector3(3.5f, 0, transform.position.z);
+        }
+
+        if (transform.position.x <= -3.5f)
+        {
+            transform.position = new Vector3(-3.5f, 0, transform.position.z);
+        }*/
+
+
+        // 새로운 방식
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -3.8f, 3.8f), 0, transform.position.z);
     }
 }
