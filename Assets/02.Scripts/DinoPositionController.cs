@@ -5,9 +5,11 @@ using UnityEngine;
 public class DinoPositionController : MonoBehaviour
 {
     public Transform raptors;   // Raptor들을 관리할 부모 오브제그의 Transform
+    public GameObject raptorPrefab;  // 추가할 Raptor 프리팹
 
     public float radius = 1f;   // 원의 반지름
     public float ratio = 1f;  // 배치 간격 비율 (작을수록 촘촘하게)
+
     void Start()
     {
         
@@ -16,6 +18,37 @@ public class DinoPositionController : MonoBehaviour
     void Update()
     {
         SetDinoPosition();
+    }
+
+    public void SetDoorCalc(DoorType doorType, int doorNumber)
+    {
+        if (doorType.Equals(DoorType.Plus))
+        {
+            PlusRaptor(doorNumber);
+        }
+        else if (doorType.Equals(DoorType.Minus))
+        {
+
+
+        }
+        else if (doorType.Equals(DoorType.Times))
+        {
+
+
+        }
+        else if (doorType.Equals(DoorType.Division))
+        {
+
+
+        }
+    }
+
+    private void PlusRaptor(int number)
+    {
+        for(int i = 0; i < number; i++)
+        {
+            Instantiate(raptorPrefab, raptors);
+        }
     }
 
     private void SetDinoPosition()
