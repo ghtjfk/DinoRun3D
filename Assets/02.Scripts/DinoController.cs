@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class DinoController : MonoBehaviour
 {
+    public static DinoController instance;
+
     public float runSpeed;
     public float xMoveSpeed;
 
@@ -13,9 +15,16 @@ public class DinoController : MonoBehaviour
 
     public DinoPositionController dinoPositionController;
 
-    void Start()
+    private void Awake()
     {
-        
+        if (instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
     }
 
     void Update()
@@ -74,10 +83,12 @@ public class DinoController : MonoBehaviour
             if (doors.CompareTag("Goal"))
             {
                 Debug.Log("골인이야!");
-                doors.gameObject.GetComponent<BoxCollider>().enabled = false;
+                PlayerPrefs.SetInt("Stage", PlayerPrefs.GetInt("Stage") + 1);   // 현재 Stage에서 1 더하여 저장
+                doors.gameObject.GetComponent<BoxCollider>().enabled = false;   // door의 BoxCollider 비활성화
+                SceneManager.LoadScene(0);  // 0번째 씬(현재 씬)을 로드
             }
 
-            else
+            else if(doors.gameObject.GetComponent<SelectDoors>() != null)
             {
                 // x값에 따른 type과 number 받아오기
                 DoorType doorType = doors.gameObject.GetComponent<SelectDoors>().GetDoorType(transform.position.x);
