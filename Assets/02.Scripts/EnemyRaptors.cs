@@ -6,6 +6,7 @@ public class EnemyRaptors : MonoBehaviour
 {
     public GameObject enemyRaptorPrefab;
     public int enemyRaptorNumber;
+    public Transform enemyRaptorParent; // EnemyRaptor가 생성되는 오브젝트의 부모가 되는 오브젝트
 
     public float initialRadius = 0f;    // 첫 오브젝트의 반지름
     public float radiusGrowth = 0.12f;  // 오브젝트 간 반지름 증가량
@@ -13,7 +14,8 @@ public class EnemyRaptors : MonoBehaviour
 
     void Start()
     {
-        CreateEnemyRaptors();    
+        CreateEnemyRaptors();  
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(true);   // 바로 아래 있는 오브젝트 활성화
     }
 
     private void CreateEnemyRaptors()
@@ -31,7 +33,7 @@ public class EnemyRaptors : MonoBehaviour
             float x = Mathf.Cos(angle * Mathf.Deg2Rad) * currentRadius;
             float z = Mathf.Sin(angle * Mathf.Deg2Rad) * currentRadius;
 
-            GameObject enemyRaptor = Instantiate(enemyRaptorPrefab, transform);
+            GameObject enemyRaptor = Instantiate(enemyRaptorPrefab, enemyRaptorParent);
             enemyRaptor.gameObject.transform.localPosition = new Vector3(x, 0, z);
         }
     }

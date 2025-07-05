@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     private State state;    // 적의 상태를 나타낼 변수
     private Transform targetRaptor;     // 타겟이 될 Raptor
 
+    [SerializeField] private bool isTargetOn;   // "나 타겟 찾았어!"를 나타내는 변수
+
     void Start()
     {
         GetComponent<Animator>().speed = 0f;    // 처음은 가만히 대기함
@@ -42,22 +44,24 @@ public class Enemy : MonoBehaviour
 
     private void DetectDino()   // Dino를 찾고 있는 함수, 항상 Update에서 작동되고 있음.
     {
+        if (isTargetOn.Equals(true)) return;    // 찜한 Dino가 있다면 탐지X
+
         // 구체 영역 내의 Collider들을 감지
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectRadius);
 
         // 감지된 Collider들 처리
         foreach (Collider colls in hitColliders)
         {
+            Raptor raptor = colls.GetComponent<Raptor>();
             // 검색된 곳에 Dino가 있다면
-            if(colls.gameObject.GetComponent<Raptor>() != null)
+            if(raptor != null && raptor.IsTarget().Equals(false))
             {
-                if (colls.gameObject.GetComponent<Raptor>().IsTarget()) continue;   // 이미 타겟으로 지정되어 있다면, 다음 충돌 오브젝트로
-
                 colls.gameObject.GetComponent<Raptor>().SetTarget();    // 충돌 오브젝트에 타겟으로 지정됐다고 스위치 켜주기
-
+                isTargetOn = true;
                 targetRaptor = colls.gameObject.transform;  // 충돌 오브젝트를 targetRaptor로 지정
-
                 StartGoToDino();    // 상태 바꿔주기
+
+                break;  // 더 이상 순회하지 않고 루프를 빠져나간다.
             }
         }
     }
@@ -79,6 +83,7 @@ public class Enemy : MonoBehaviour
 
         if(Vector3.Distance(transform.position, targetRaptor.position) < 0.1f)
         {
+            SoundManager.instance.DinoDieSoundPlay();   // 효과음 실행
             Destroy(targetRaptor.gameObject);   // targetRaptor 삭제
             Destroy(this.gameObject);   // Enemy인 나 자신도 삭제
         }

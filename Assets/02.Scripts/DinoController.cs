@@ -82,14 +82,14 @@ public class DinoController : MonoBehaviour
         {
             if (doors.CompareTag("Goal"))
             {
-                Debug.Log("골인이야!");
                 PlayerPrefs.SetInt("Stage", PlayerPrefs.GetInt("Stage") + 1);   // 현재 Stage에서 1 더하여 저장
                 doors.gameObject.GetComponent<BoxCollider>().enabled = false;   // door의 BoxCollider 비활성화
-                SceneManager.LoadScene(0);  // 0번째 씬(현재 씬)을 로드
+                GameManager.instance.StageClear();
             }
 
             else if(doors.gameObject.GetComponent<SelectDoors>() != null)
             {
+                SoundManager.instance.DoorHitSoundPlay(); // 효과음 실행
                 // x값에 따른 type과 number 받아오기
                 DoorType doorType = doors.gameObject.GetComponent<SelectDoors>().GetDoorType(transform.position.x);
                 int doorNumber = doors.gameObject.GetComponent<SelectDoors>().GetDoorNumber(transform.position.x);
